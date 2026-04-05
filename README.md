@@ -120,16 +120,6 @@ cd ai-powered-personalized-study-planner
 
 ---
 
-
-# 🔥 Why this README is strong
-
-- Clearly shows **AI usage (important for recruiters)**
-- Explains **pipeline (very important)**
-- Looks **clean + professional**
-- Easy to understand in **<30 seconds**
-
----
-
 ## 🎯 Conclusion
 
 - 📊 Demonstrates a complete end-to-end Machine Learning pipeline.  
