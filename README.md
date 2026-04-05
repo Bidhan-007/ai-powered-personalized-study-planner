@@ -120,10 +120,6 @@ cd ai-powered-personalized-study-planner
 
 ---
 
-## 👨‍💻 Author
-**Bidhan Yadav**
-
----
 
 # 🔥 Why this README is strong
 
@@ -144,7 +140,7 @@ cd ai-powered-personalized-study-planner
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Developer
 
 **Bidhan Yadav**
 
@@ -155,6 +151,6 @@ cd ai-powered-personalized-study-planner
 - 📧 Email: ybidhan121@gmail.com  
 - 🔗 GitHub: https://github.com/Bidhan-007 
 - 💼 LinkedIn: https://www.linkedin.com/in/bidhan-ydv-17bb09354/  
-
+- 🏆 LeetCode: https://leetcode.com/u/Bidhan-007/
 
 
