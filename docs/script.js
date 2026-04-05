@@ -361,19 +361,19 @@ function showMember(name) {
 
     let data = {
         bidhan: {
-            img: "../frontendImage/MyImage.jpeg",
+            img: "frontendImage/MyImage.jpeg",
             name: "Bidhan Yadav",
         },
         sumit: {
-            img: "../frontendImage/SumitBro.jpeg",
+            img: "frontendImage/SumitBro.jpeg",
             name: "Sumit Chandra",
         },
         priyam: {
-            img: "../frontendImage/priyamPic.jpeg",
+            img: "frontendImage/priyamPic.jpeg",
             name: "Priyam Jha",
         },
         kshitij:{
-            img:"../frontendImage/kshitijPic.jpeg",
+            img:"frontendImage/kshitijPic.jpeg",
             name:"kshitij"
         }
     };
