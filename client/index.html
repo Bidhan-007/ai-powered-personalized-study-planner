@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMap</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+    <link rel="icon" href="HustleMap.png" type="image/png">
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    StudyMap
+  </div>
+  <div class="server-badge">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Connecting...</span>
+  </div>
+</header>
+ 
+<div class="wrapper">
+  <div class="hero">
+    <h1>Predict. Analyze.<br>Improve.</h1>
+    <p>Enter your study data to get an AI-powered score prediction, weakness analysis, and personalized study plan.</p>
+  </div>
+ 
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('predict')">🎯 Predict Score</button>
+    <button class="tab-btn" onclick="switchTab('weakness')">🔬 Weakness Analysis</button>
+    <button class="tab-btn" onclick="switchTab('plan')">📅 Study Plan</button>
+  </div>
+ 
+  <!-- ═══════════ PREDICT PANEL ═══════════ -->
+  <div id="panel-predict" class="panel active">
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-title">📊 Past Exam Marks</div>
+          <div class="form-group">
+            <label>Enter your last 5 exam marks (oldest → newest)</label>
+            <div class="marks-row" id="marksRow">
+              <input type="number" class="mark-input" placeholder="Exam 1" min="0" max="100" value="65"/>
+              <input type="number" class="mark-input" placeholder="Exam 2" min="0" max="100" value="68"/>
+              <input type="number" class="mark-input" placeholder="Exam 3" min="0" max="100" value="70"/>
+              <input type="number" class="mark-input" placeholder="Exam 4" min="0" max="100" value="72"/>
+              <input type="number" class="mark-input" placeholder="Exam 5" min="0" max="100" value="69"/>
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label>Subject</label>
+            <select id="subject">
+              <option>Chemistry</option>
+              <option>Computer Science</option>
+              <option>English</option>
+              <option>Geography</option>
+              <option>History</option>
+              <option selected>Mathematics</option>
+              <option>Physics</option>
+              <option>Science</option>
+            </select>
+          </div>
+ 
+          <div class="form-group">
+            <label>Exam Date</label>
+            <input type="date" id="examDate"/>
+          </div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title">📚 Study Habits</div>
+ 
+          <div class="form-group">
+            <label>Study Hours per Day</label>
+            <div class="range-row">
+              <input type="range" id="studyHours" min="0.5" max="8" step="0.5" value="3" oninput="document.getElementById('studyHoursVal').textContent=this.value+'h'"/>
+              <span class="range-val" id="studyHoursVal">3h</span>
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label>Study Consistency (0 = irregular, 1 = every day)</label>
+            <div class="range-row">
+              <input type="range" id="consistency" min="0.1" max="1" step="0.05" value="0.7" oninput="document.getElementById('consistencyVal').textContent=Math.round(this.value*100)+'%'"/>
+              <span class="range-val" id="consistencyVal">70%</span>
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label>Attendance %</label>
+            <div class="range-row">
+              <input type="range" id="attendance" min="40" max="100" step="1" value="80" oninput="document.getElementById('attendanceVal').textContent=this.value+'%'"/>
+              <span class="range-val" id="attendanceVal">80%</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title">⚠️ Weak Topics</div>
+          <div class="form-group">
+            <label>Type a topic and press Enter to add</label>
+            <div class="tags-container" id="weakTagsContainer" onclick="document.getElementById('weakTagInput').focus()">
+              <input class="tag-input" id="weakTagInput" placeholder="e.g. Algebra, Photosynthesis..."/>
+            </div>
+          </div>
+        </div>
+ 
+        <button class="btn" onclick="runPredict()" id="predictBtn">
+          → Predict My Score
+        </button>
+      </div>
+ 
+      <!-- RESULTS -->
+      <div id="results">
+        <div class="card">
+          <div class="card-title">🎯 Prediction Result</div>
+          <div class="score-display">
+            <div class="score-ring">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+                <circle id="scoreArc" cx="70" cy="70" r="56" fill="none" stroke="#6ee7b7" stroke-width="10"
+                        stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"/>
+              </svg>
+              <div class="score-ring-val">
+                <div class="score-num" id="scoreNum">—</div>
+                <div class="score-label">/ 100</div>
+              </div>
+            </div>
+            <div id="scoreStatus" class="score-status">—</div>
+            <div style="margin-top:8px; font-size:13px; color:var(--muted)" id="confidenceTxt"></div>
+          </div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title">📈 Key Stats</div>
+          <div class="grid-3" id="statsChips"></div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title">⚡ Key Drivers</div>
+          <div id="driversList"></div>
+        </div>
+      </div>
+ 
+      <div id="predictLoading" style="display:none">
+        <div class="loading">⏳ Analyzing your data...</div>
+      </div>
+      <div id="predictError" style="display:none"></div>
+    </div>
+  </div>
+ 
+  <!-- ═══════════ WEAKNESS PANEL ═══════════ -->
+  <div id="panel-weakness" class="panel">
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-title">📊 Your Performance Data</div>
+          <div class="form-group">
+            <label>Last 5 Exam Marks (oldest → newest)</label>
+            <div class="marks-row" id="wMarksRow">
+              <input type="number" class="wmark-input" placeholder="M1" min="0" max="100" value="60"/>
+              <input type="number" class="wmark-input" placeholder="M2" min="0" max="100" value="55"/>
+              <input type="number" class="wmark-input" placeholder="M3" min="0" max="100" value="58"/>
+              <input type="number" class="wmark-input" placeholder="M4" min="0" max="100" value="52"/>
+              <input type="number" class="wmark-input" placeholder="M5" min="0" max="100" value="50"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Exam Date</label>
+            <input type="date" id="wExamDate"/>
+          </div>
+          <div class="form-group">
+            <label>Study Hours / Day</label>
+            <div class="range-row">
+              <input type="range" id="wStudyHours" min="0.5" max="8" step="0.5" value="2" oninput="document.getElementById('wStudyVal').textContent=this.value+'h'"/>
+              <span class="range-val" id="wStudyVal">2h</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Attendance %</label>
+            <div class="range-row">
+              <input type="range" id="wAttendance" min="40" max="100" step="1" value="70" oninput="document.getElementById('wAttVal').textContent=this.value+'%'"/>
+              <span class="range-val" id="wAttVal">70%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Weak Topics (Enter to add)</label>
+            <div class="tags-container" id="wWeakTagsContainer" onclick="document.getElementById('wWeakTagInput').focus()">
+              <input class="tag-input" id="wWeakTagInput" placeholder="Topic..."/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Strong Topics (Enter to add)</label>
+            <div class="tags-container" id="wStrongTagsContainer" onclick="document.getElementById('wStrongTagInput').focus()">
+              <input class="tag-input" id="wStrongTagInput" placeholder="Topic..."/>
+            </div>
+          </div>
+          <button class="btn" onclick="runWeakness()">→ Analyze My Weaknesses</button>
+        </div>
+      </div>
+ 
+      <div>
+        <div id="weaknessResults" style="display:none; animation: fadeUp 0.4s ease">
+          <div class="card">
+            <div class="card-title">📊 Performance Overview</div>
+            <div class="grid-3" id="wStatChips"></div>
+          </div>
+          <div class="card" id="wInsightsCard">
+            <div class="card-title">💡 Insights</div>
+            <div id="wInsights"></div>
+          </div>
+          <div class="card" id="wFocusCard">
+            <div class="card-title">🎯 Focus Areas (Priority Order)</div>
+            <div id="wFocusAreas"></div>
+          </div>
+        </div>
+        <div id="weaknessLoading" style="display:none"><div class="loading">⏳ Analyzing...</div></div>
+        <div id="weaknessError" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ═══════════ PLAN PANEL ═══════════ -->
+  <div id="panel-plan" class="panel">
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-title">📅 Plan Parameters</div>
+          <div class="form-group">
+            <label>Exam Date</label>
+            <input type="date" id="pExamDate"/>
+          </div>
+          <div class="form-group">
+            <label>Last 5 Marks (oldest → newest)</label>
+            <div class="marks-row" id="pMarksRow">
+              <input type="number" class="pmark-input" placeholder="M1" min="0" max="100" value="65"/>
+              <input type="number" class="pmark-input" placeholder="M2" min="0" max="100" value="68"/>
+              <input type="number" class="pmark-input" placeholder="M3" min="0" max="100" value="70"/>
+              <input type="number" class="pmark-input" placeholder="M4" min="0" max="100" value="72"/>
+              <input type="number" class="pmark-input" placeholder="M5" min="0" max="100" value="69"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Study Hours / Day</label>
+            <div class="range-row">
+              <input type="range" id="pStudyHours" min="0.5" max="8" step="0.5" value="3" oninput="document.getElementById('pStudyVal').textContent=this.value+'h'"/>
+              <span class="range-val" id="pStudyVal">3h</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Weak Topics (Enter to add)</label>
+            <div class="tags-container" id="pWeakTagsContainer" onclick="document.getElementById('pWeakTagInput').focus()">
+              <input class="tag-input" id="pWeakTagInput" placeholder="Topic..."/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Strong Topics (Enter to add)</label>
+            <div class="tags-container" id="pStrongTagsContainer" onclick="document.getElementById('pStrongTagInput').focus()">
+              <input class="tag-input" id="pStrongTagInput" placeholder="Topic..."/>
+            </div>
+          </div>
+          <button class="btn" onclick="runPlan()">→ Generate Study Plan</button>
+        </div>
+      </div>
+ 
+      <div>
+        <div id="planResults" style="display:none; animation: fadeUp 0.4s ease">
+          <div class="card">
+            <div class="card-title">⏱️ Time Allocation</div>
+            <div class="grid-3" id="pStatChips" style="margin-bottom:20px"></div>
+            <div id="pHoursBars"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">📆 Daily Schedule</div>
+            <div id="pDailySchedule"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">🏁 Milestones</div>
+            <div id="pMilestones"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">📚 Topic Allocation</div>
+            <div id="pWeeklyOverview"></div>
+        </div>
+        </div>
+        <div id="planLoading" style="display:none"><div class="loading">⏳ Building your plan...</div></div>
+        <div id="planError" style="display:none"></div>
+    </div>
+    </div>
+</div>
+</div>
+<!-- Footer Part -->
+<footer class="footer">
+    <div class="footer-content">
+        <h3>StudyMap</h3>
+        <p>Analyze • Predict • Excel</p>
+
+        <div class="team">
+            <p><strong>Developed By:</strong></p>
+          <p class="team-names">
+      <span onclick="showMember('bidhan')">👨‍💻 Bidhan Yadav</span>
+      <span onclick="showMember('sumit')">👨 Rahul</span>
+      <span onclick="showMember('priyam')">👨Priyam</span>
+      <span onclick="showMember('kshitij')">👨Kshitij</span>
+  </p>
+
+  <!-- Profile Card -->
+  <div id="member-card" class="member-card" style="display:none;">
+      <img id="member-img" src="" alt="Member Photo">
+      <h3 id="member-name"></h3>
+      <p id="member-role"></p>
+      <button onclick="closeCard()">Close</button>
+  </div>
+        </div>
+
+        <div class="footer-links">
+            <p>📊 AI-Powered Student Performance Predictor</p>
+            <p>🎯 Smart Study Planning & Weakness Analysis</p>
+        </div>
+
+        <p class="copyright">
+            © 2026 StudyMap | All Rights Reserved
+        </p>
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
