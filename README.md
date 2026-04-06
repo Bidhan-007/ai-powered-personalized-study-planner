@@ -93,7 +93,7 @@ git clone https://github.com/Bidhan-007/ai-powered-personalized-study-planner.gi
 
 cd ai-powered-personalized-study-planner
 
-
+```
 ## 📊 Technologies Used
 - Python 🐍  
 - Scikit-learn 🤖  
