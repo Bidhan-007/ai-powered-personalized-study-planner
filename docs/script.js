@@ -375,6 +375,10 @@ function showMember(name) {
         kshitij:{
             img:"kshitijPic.jpeg",
             name:"kshitij"
+        },
+        Aaryan:{
+          img:"AaryanPic.jpeg",
+          name:"Aaryan"
         }
     };
 
