@@ -15,7 +15,7 @@ An intelligent system that generates personalized study plans for students by an
 - [🔥 Key Features](#-key-features)  
 - [📌 Future Improvements](#-future-improvements)    
 - [🎯 Conclusion](#-conclusion)  
-- [👨‍💻 Author](#-author)
+- [👨‍💻 Developer](#-Developer)
 - [📬 Contact](#-contact)  
 
 ---
